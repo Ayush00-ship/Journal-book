@@ -4,73 +4,98 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Trade Journal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
+    * {
+      box-sizing: border-box;
+    }
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f2f2f2;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(to right, #f8f9fa, #e9ecef);
       padding: 20px;
-      color: #333;
+      margin: 0;
+      color: #212529;
     }
     h1 {
       text-align: center;
+      font-size: 2.5rem;
+      margin-bottom: 30px;
+      color: #343a40;
     }
     form {
-      max-width: 800px;
+      max-width: 900px;
       margin: auto;
-      background: #fff;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
     }
     input, select, textarea, button {
       width: 100%;
-      margin: 8px 0;
-      padding: 10px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
+      margin: 10px 0;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #ced4da;
+      font-size: 1rem;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: #007bff;
+      box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
     }
     button {
-      background: #4caf50;
+      background: #007bff;
       color: white;
+      font-weight: 600;
+      transition: background 0.3s ease;
       border: none;
-      cursor: pointer;
     }
     button:hover {
-      background: #45a049;
+      background: #0056b3;
     }
     .trade-list {
-      max-width: 800px;
-      margin: 30px auto;
+      max-width: 900px;
+      margin: 40px auto;
     }
     .trade-card {
       background: white;
-      padding: 15px;
-      border-radius: 10px;
-      margin-bottom: 10px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
       position: relative;
+      transition: transform 0.2s;
+    }
+    .trade-card:hover {
+      transform: translateY(-3px);
     }
     .delete-btn {
       position: absolute;
-      top: 10px;
-      right: 10px;
-      background: crimson;
+      top: 15px;
+      right: 15px;
+      background: #dc3545;
       color: white;
       border: none;
-      padding: 5px 10px;
+      padding: 6px 12px;
       border-radius: 6px;
       cursor: pointer;
+      font-weight: bold;
     }
     .delete-btn:hover {
-      background: darkred;
+      background: #b02a37;
+    }
+    label {
+      font-weight: 600;
     }
   </style>
 </head>
 <body>
-  <h1>Trade Journal</h1>
+  <h1>📈 Trade Journal</h1>
   <form id="tradeForm">
+    <label>Date & Time</label>
     <input type="datetime-local" id="datetime" required />
-    
+
+    <label>Asset Type</label>
     <select id="assetType" required>
       <option value="" disabled selected>Select Asset Type</option>
       <option value="forex">Forex</option>
@@ -78,19 +103,27 @@
       <option value="stock">Stock</option>
     </select>
 
+    <label>Instrument</label>
     <select id="instrument" required>
       <option value="" disabled selected>Select Instrument</option>
     </select>
 
+    <label>Setup Type</label>
     <select id="setup">
       <option value="Technical">Technical</option>
       <option value="Fundamental">Fundamental</option>
     </select>
-    
-    <input type="text" id="entryExit" placeholder="Entry/Exit Points" required />
-    <input type="text" id="size" placeholder="Position Size" required />
-    <input type="text" id="stopTarget" placeholder="Stop Loss & Target" required />
-    
+
+    <label>Entry/Exit Points</label>
+    <input type="text" id="entryExit" required />
+
+    <label>Position Size</label>
+    <input type="text" id="size" required />
+
+    <label>Stop Loss & Target</label>
+    <input type="text" id="stopTarget" required />
+
+    <label>Reason for Trade</label>
     <select id="reason" required>
       <option value="" disabled selected>Reason for Trade</option>
       <option>Breakout</option>
@@ -103,11 +136,14 @@
       <option>Volume Spike</option>
       <option>Other</option>
     </select>
-    
-    <textarea id="emotion" placeholder="Emotion Before/During/After" rows="2"></textarea>
-    <textarea id="analysis" placeholder="Post-Trade Analysis" rows="2"></textarea>
-    
-    <button type="submit">Save Trade</button>
+
+    <label>Emotion Before/During/After</label>
+    <textarea id="emotion" rows="2"></textarea>
+
+    <label>Post-Trade Analysis</label>
+    <textarea id="analysis" rows="2"></textarea>
+
+    <button type="submit">➕ Save Trade</button>
   </form>
 
   <div class="trade-list" id="tradeList"></div>
@@ -118,26 +154,16 @@
     const assetType = document.getElementById('assetType');
     const instrument = document.getElementById('instrument');
 
-    const forexPairs = [
-      "EUR/USD", "GBP/USD", "USD/JPY", "USD/CHF", "AUD/USD", "NZD/USD", "USD/CAD", "EUR/JPY", "GBP/JPY"
-    ];
-    const cryptoPairs = [
-      "BTC/USDT", "ETH/USDT", "BNB/USDT", "XRP/USDT", "ADA/USDT", "DOGE/USDT", "SOL/USDT", "DOT/USDT"
-    ];
-    const stockSymbols = [
-      "AAPL", "MSFT", "GOOGL", "AMZN", "TSLA", "META", "NFLX", "NVDA", "AMD", "BABA"
-    ];
+    const forexPairs = ["EUR/USD", "GBP/USD", "USD/JPY", "USD/CHF", "AUD/USD", "NZD/USD", "USD/CAD", "EUR/JPY", "GBP/JPY"];
+    const cryptoPairs = ["BTC/USDT", "ETH/USDT", "BNB/USDT", "XRP/USDT", "ADA/USDT", "DOGE/USDT", "SOL/USDT", "DOT/USDT"];
+    const stockSymbols = ["AAPL", "MSFT", "GOOGL", "AMZN", "TSLA", "META", "NFLX", "NVDA", "AMD", "BABA"];
 
     function updateInstruments() {
       const type = assetType.value;
       let options = ['<option value="" disabled selected>Select Instrument</option>'];
-      if (type === 'forex') {
-        forexPairs.forEach(p => options.push(`<option value="${p}">${p}</option>`));
-      } else if (type === 'crypto') {
-        cryptoPairs.forEach(p => options.push(`<option value="${p}">${p}</option>`));
-      } else if (type === 'stock') {
-        stockSymbols.forEach(p => options.push(`<option value="${p}">${p}</option>`));
-      }
+      if (type === 'forex') forexPairs.forEach(p => options.push(`<option value="${p}">${p}</option>`));
+      if (type === 'crypto') cryptoPairs.forEach(p => options.push(`<option value="${p}">${p}</option>`));
+      if (type === 'stock') stockSymbols.forEach(p => options.push(`<option value="${p}">${p}</option>`));
       instrument.innerHTML = options.join('');
     }
 
@@ -177,8 +203,8 @@
       e.preventDefault();
       const newTrade = {
         datetime: document.getElementById('datetime').value,
-        assetType: document.getElementById('assetType').value,
-        instrument: document.getElementById('instrument').value,
+        assetType: assetType.value,
+        instrument: instrument.value,
         setup: document.getElementById('setup').value,
         entryExit: document.getElementById('entryExit').value,
         size: document.getElementById('size').value,
