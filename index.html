@@ -7,10 +7,10 @@
   <style>
     /* General Styles */
     body {
-      font-family: 'Arial', sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
       padding: 0;
-      background: #e2f3f5;
+      background: #f4f7fa;
       color: #333;
       height: 100vh;
       overflow-x: hidden;
@@ -19,19 +19,18 @@
 
     /* Header Styles */
     header {
-      background-color: #2C3E50;
+      background-color: #34495E;
       color: white;
       padding: 20px 0;
       text-align: center;
-      font-size: 30px;
-      letter-spacing: 1.5px;
-      border-radius: 0 0 15px 15px;
+      font-size: 28px;
+      letter-spacing: 1px;
+      border-radius: 0 0 20px 20px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-      margin-bottom: 20px;
     }
 
     header button {
-      background-color: #16a085;
+      background-color: #2980B9;
       color: white;
       border: none;
       padding: 10px 20px;
@@ -42,14 +41,14 @@
     }
 
     header button:hover {
-      background-color: #1abc9c;
+      background-color: #3498DB;
     }
 
     /* Main Container */
     .container {
-      width: 90%;
+      width: 80%;
       max-width: 1200px;
-      margin: 0 auto;
+      margin: 40px auto;
       padding: 40px;
       background-color: white;
       border-radius: 12px;
@@ -61,33 +60,33 @@
     #tradeForm {
       display: flex;
       flex-wrap: wrap;
-      gap: 20px;
+      gap: 25px;
       margin-bottom: 40px;
     }
 
     #tradeForm input,
     #tradeForm select,
     #tradeForm textarea {
-      width: 100%;
+      width: 48%;
       padding: 15px;
       border-radius: 8px;
       border: 1px solid #ccc;
       font-size: 16px;
       background-color: #f9f9f9;
-      transition: border-color 0.3s ease, background-color 0.3s ease;
+      transition: border-color 0.3s ease;
     }
 
     #tradeForm input:focus,
     #tradeForm select:focus,
     #tradeForm textarea:focus {
-      border-color: #1abc9c;
+      border-color: #2980B9;
       outline: none;
       background-color: #fff;
     }
 
     /* Button Styles */
     button {
-      background-color: #2C3E50;
+      background-color: #34495E;
       color: white;
       padding: 12px 25px;
       border-radius: 25px;
@@ -98,7 +97,7 @@
     }
 
     button:hover {
-      background-color: #34495E;
+      background-color: #1abc9c;
     }
 
     /* Table Styles */
@@ -108,6 +107,7 @@
       border-collapse: collapse;
       border-radius: 8px;
       overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     }
 
     .trade-history th,
@@ -118,7 +118,7 @@
     }
 
     .trade-history th {
-      background-color: #2C3E50;
+      background-color: #34495E;
       color: white;
       font-size: 18px;
     }
@@ -128,7 +128,7 @@
     }
 
     .trade-history tr:hover {
-      background-color: #e0e0e0;
+      background-color: #ecf0f1;
       cursor: pointer;
     }
 
