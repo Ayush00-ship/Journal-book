@@ -131,11 +131,56 @@
     .csv-btn:hover {
       background: #218838;
     }
+    .search-bar {
+      margin-bottom: 25px;
+      text-align: center;
+    }
+    .search-bar input {
+      padding: 10px 15px;
+      width: 300px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    .stats {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 30px;
+      font-size: 1rem;
+    }
+    .stats div {
+      background: #f7f7f7;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+      flex: 1;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
   <h1>📒 Trade Journal Book</h1>
   <div class="journal-book">
+    <!-- Search Bar -->
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search trades by instrument..." onkeyup="searchTrades()" />
+    </div>
+
+    <!-- Stats Section -->
+    <div class="stats">
+      <div>
+        <strong>Total Trades</strong>
+        <div id="totalTrades">0</div>
+      </div>
+      <div>
+        <strong>Wins</strong>
+        <div id="wins">0</div>
+      </div>
+      <div>
+        <strong>Loses</strong>
+        <div id="losses">0</div>
+      </div>
+    </div>
+
     <form id="tradeForm">
       <label>Date & Time</label>
       <input type="datetime-local" id="datetime" required />
@@ -185,6 +230,7 @@
     <!-- Button to download CSV -->
     <button class="csv-btn" onclick="downloadCSV()">💾 Download Journal as CSV</button>
 
+    <!-- Trade List -->
     <div class="trade-list" id="tradeList"></div>
   </div>
 
@@ -193,6 +239,10 @@
     const tradeList = document.getElementById('tradeList');
     const assetType = document.getElementById('assetType');
     const instrument = document.getElementById('instrument');
+    const searchInput = document.getElementById('searchInput');
+    const totalTrades = document.getElementById('totalTrades');
+    const wins = document.getElementById('wins');
+    const losses = document.getElementById('losses');
 
     const forexPairs = ["EUR/USD", "GBP/USD", "USD/JPY", "USD/CHF", "AUD/USD", "NZD/USD", "USD/CAD", "EUR/JPY", "GBP/JPY"];
     const cryptoPairs = ["BTC/USDT", "ETH/USDT", "BNB/USDT", "XRP/USDT", "ADA/USDT", "DOGE/USDT", "SOL/USDT", "DOT/USDT"];
@@ -215,6 +265,9 @@
 
     function displayTrades() {
       tradeList.innerHTML = '';
+      let winCount = 0;
+      let lossCount = 0;
+
       trades.forEach((trade, index) => {
         const card = document.createElement('div');
         card.className = 'trade-card';
@@ -232,7 +285,15 @@
           <small>Saved on ${new Date(trade.datetime).toLocaleString()}</small>
         `;
         tradeList.appendChild(card);
+
+        // Update wins/losses based on some criteria, e.g., using 'reason' or other data
+        if (trade.reason === 'Breakout') winCount++;
+        else lossCount++;
       });
+
+      totalTrades.textContent = trades.length;
+      wins.textContent = winCount;
+      losses.textContent = lossCount;
     }
 
     function deleteTrade(index) {
@@ -250,48 +311,3 @@
         setup: document.getElementById('setup').value,
         entryExit: document.getElementById('entryExit').value,
         size: document.getElementById('size').value,
-        stopTarget: document.getElementById('stopTarget').value,
-        reason: document.getElementById('reason').value,
-        emotion: document.getElementById('emotion').value,
-        analysis: document.getElementById('analysis').value
-      };
-      trades.push(newTrade);
-      localStorage.setItem('trades', JSON.stringify(trades));
-      form.reset();
-      instrument.innerHTML = '<option value="" disabled selected>Select Instrument</option>';
-      displayTrades();
-    });
-
-    function downloadCSV() {
-      const csvRows = [];
-      const headers = ['Date/Time', 'Asset Type', 'Instrument', 'Setup Type', 'Entry/Exit', 'Size', 'Stop/Target', 'Reason', 'Emotion', 'Post-Trade Analysis'];
-      csvRows.push(headers.join(','));
-
-      trades.forEach(trade => {
-        const row = [
-          trade.datetime,
-          trade.assetType,
-          trade.instrument,
-          trade.setup,
-          trade.entryExit,
-          trade.size,
-          trade.stopTarget,
-          trade.reason,
-          trade.emotion,
-          trade.analysis
-        ];
-        csvRows.push(row.join(','));
-      });
-
-      const csvString = csvRows.join('\n');
-      const blob = new Blob([csvString], { type: 'text/csv' });
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = 'trade_journal.csv';
-      link.click();
-    }
-
-    displayTrades();
-  </script>
-</body>
-</html>
