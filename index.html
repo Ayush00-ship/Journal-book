@@ -7,42 +7,47 @@
   <style>
     /* General Styles */
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Arial', sans-serif;
       margin: 0;
       padding: 0;
       background: linear-gradient(135deg, #f5f7fa, #c3cfe2); /* Gradient background */
       color: #333;
       height: 100vh;
+      transition: background 0.3s ease;
     }
 
     /* Container Styles */
     .container {
       width: 90%;
+      max-width: 1200px;
       margin: 0 auto;
-      padding: 20px;
+      padding: 30px;
       background-color: rgba(255, 255, 255, 0.8); /* Light transparent white */
-      border-radius: 8px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
       margin-top: 30px;
+      transition: all 0.3s ease;
     }
 
     header {
       background-color: #4CAF50;
       color: white;
-      padding: 15px 20px;
+      padding: 20px;
       text-align: center;
-      border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     }
 
     /* Button Styles */
     button {
       background-color: #4CAF50;
       color: white;
-      padding: 10px 20px;
+      padding: 12px 25px;
       border: none;
       cursor: pointer;
-      border-radius: 5px;
+      border-radius: 8px;
+      font-size: 16px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
     button:hover {
@@ -62,11 +67,14 @@
     #tradeForm select,
     #tradeForm textarea {
       width: 100%;
-      padding: 12px;
-      margin: 8px 0;
-      box-sizing: border-box;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 8px;
       border: 2px solid #ddd;
-      border-radius: 5px;
+      box-sizing: border-box;
+      font-size: 16px;
+      background-color: #f9f9f9;
+      transition: all 0.3s ease;
     }
 
     #tradeForm input:focus,
@@ -74,6 +82,7 @@
     #tradeForm textarea:focus {
       border-color: #4CAF50;
       outline: none;
+      background-color: #fff;
     }
 
     /* Table Styles */
@@ -82,13 +91,14 @@
       margin-top: 20px;
       border-collapse: collapse;
       background-color: #fff;
-      border-radius: 8px;
+      border-radius: 12px;
       overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
     .trade-history th,
     .trade-history td {
-      padding: 12px;
+      padding: 15px;
       text-align: left;
       border-bottom: 1px solid #ddd;
     }
@@ -96,10 +106,16 @@
     .trade-history th {
       background-color: #4CAF50;
       color: white;
+      font-size: 18px;
     }
 
     .trade-history tr:nth-child(even) {
-      background-color: #f4f4f4;
+      background-color: #f9f9f9;
+    }
+
+    .trade-history tr:hover {
+      background-color: #e2f0d9;
+      cursor: pointer;
     }
 
     /* Dark Mode Styling */
@@ -135,20 +151,24 @@
 
     /* Stats Section */
     #tradeStats {
-      margin-top: 20px;
-      padding: 20px;
-      background-color: rgba(255, 255, 255, 0.8);
-      border-radius: 8px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      margin-top: 30px;
+      padding: 25px;
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
 
     /* Mobile Responsiveness */
     @media (max-width: 768px) {
       .container {
         width: 100%;
+        padding: 20px;
+      }
+
+      button {
+        width: 100%;
       }
     }
-
   </style>
 </head>
 <body>
