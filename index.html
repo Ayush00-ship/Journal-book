@@ -3,237 +3,190 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Trading Journal with Simulation Mode</title>
+  <title>Trading Journal</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    /* Base styles */
+    /* Add your CSS here */
     body {
       font-family: Arial, sans-serif;
-      padding: 20px;
-      background-color: #f7f7f7;
+      background-color: #f4f4f4;
       color: #333;
+      margin: 0;
+      padding: 0;
     }
 
-    h3 {
+    .container {
+      width: 90%;
+      margin: 0 auto;
+    }
+
+    header {
+      background-color: #333;
+      color: #fff;
+      padding: 10px;
       text-align: center;
-      color: #333;
     }
 
-    .simulation-toggle,
-    .buttons-container,
-    .backup-section {
-      margin-bottom: 20px;
-      display: flex;
-      justify-content: center;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .simulation-toggle label {
-      font-size: 16px;
-      margin-right: 10px;
-    }
-
-    .simulation-indicator {
-      font-weight: bold;
-      color: #555;
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .buttons-container button {
-      padding: 12px 25px;
+    button {
       background-color: #4CAF50;
       color: white;
+      padding: 10px 20px;
       border: none;
-      border-radius: 5px;
       cursor: pointer;
-      font-size: 16px;
-      margin: 5px;
-      transition: background-color 0.3s ease;
     }
 
-    .buttons-container button:hover {
+    button:hover {
       background-color: #45a049;
     }
 
-    /* Form Styles */
-    form {
-      display: flex;
-      flex-direction: column;
-      margin-bottom: 20px;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
+    .dark-mode {
+      background-color: #333;
+      color: #fff;
     }
 
-    label {
-      margin-bottom: 5px;
-      font-weight: bold;
-    }
-
-    input, select {
-      padding: 10px;
-      margin-bottom: 10px;
-      font-size: 14px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-    }
-
-    /* Table styles */
-    table {
+    #tradeForm input, #tradeForm select, #tradeForm textarea {
       width: 100%;
-      border-collapse: collapse;
+      padding: 10px;
+      margin: 5px 0;
+      box-sizing: border-box;
+    }
+
+    .trade-history table {
+      width: 100%;
       margin-top: 20px;
-      margin-bottom: 30px;
+      border-collapse: collapse;
     }
 
-    th, td {
-      padding: 12px;
+    .trade-history th, .trade-history td {
+      padding: 10px;
+      border: 1px solid #ddd;
       text-align: left;
-      border-bottom: 1px solid #ddd;
-      font-size: 14px;
     }
 
-    /* Mobile responsiveness */
+    .trade-history th {
+      background-color: #f4f4f4;
+    }
+
+    /* Make the app mobile responsive */
     @media (max-width: 768px) {
-      body {
-        padding: 10px;
-      }
-
-      table {
-        font-size: 12px;
-      }
-
-      th, td {
-        padding: 10px;
-      }
-
-      .buttons-container button {
-        font-size: 14px;
-        padding: 10px 20px;
+      .container {
         width: 100%;
-      }
-
-      .simulation-toggle {
-        flex-direction: column;
-        align-items: center;
-      }
-
-      .simulation-indicator {
-        font-size: 14px;
-        margin-bottom: 15px;
-      }
-
-      h3 {
-        font-size: 18px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      button {
-        width: 100%;
-        margin: 10px 0;
-      }
-
-      .simulation-toggle {
-        text-align: center;
-      }
-
-      table {
-        font-size: 12px;
-        overflow-x: auto;
-        display: block;
-        white-space: nowrap;
       }
     }
   </style>
 </head>
 <body>
+  <div class="container">
+    <header>
+      <h1>Trading Journal</h1>
+      <button id="darkModeToggle" onclick="toggleDarkMode()">Toggle Dark Mode</button>
+    </header>
 
-  <!-- Simulation Mode Toggle -->
-  <div class="simulation-toggle">
-    <label for="simulationMode">Simulation Mode:</label>
-    <input type="checkbox" id="simulationMode" onchange="toggleSimulationMode()">
+    <section id="tradeForm">
+      <h2>Record Your Trade</h2>
+      <form id="tradeFormContent">
+        <label for="dateTime">Date & Time:</label>
+        <input type="datetime-local" id="dateTime" required><br>
+
+        <label for="instrument">Instrument/Asset:</label>
+        <input type="text" id="instrument" required><br>
+
+        <label for="setupType">Setup Type (Technical/Fundamental):</label>
+        <select id="setupType" required>
+          <option value="technical">Technical</option>
+          <option value="fundamental">Fundamental</option>
+        </select><br>
+
+        <label for="entryPoint">Entry Point:</label>
+        <input type="number" id="entryPoint" step="any" required><br>
+
+        <label for="exitPoint">Exit Point:</label>
+        <input type="number" id="exitPoint" step="any" required><br>
+
+        <label for="positionSize">Position Size:</label>
+        <input type="number" id="positionSize" step="any" required><br>
+
+        <label for="stopLoss">Stop Loss:</label>
+        <input type="number" id="stopLoss" step="any" required><br>
+
+        <label for="target">Target:</label>
+        <input type="number" id="target" step="any" required><br>
+
+        <label for="reason">Reason for Trade:</label>
+        <textarea id="reason" required></textarea><br>
+
+        <label for="emotion">Emotion Before/During/After:</label>
+        <textarea id="emotion" required></textarea><br>
+
+        <label for="postTradeAnalysis">Post-Trade Analysis (What went right/wrong):</label>
+        <textarea id="postTradeAnalysis" required></textarea><br>
+
+        <label for="tags">Tags (e.g., "Long", "Scalping"):</label>
+        <input type="text" id="tags" placeholder="Enter tags separated by commas"><br>
+
+        <button type="submit">Save Trade</button>
+      </form>
+    </section>
+
+    <section id="tradeStats">
+      <h2>Trade Statistics</h2>
+      <p id="stats"></p>
+      <canvas id="performanceChart" width="400" height="400"></canvas>
+    </section>
+
+    <section class="trade-history">
+      <h2>Trade History</h2>
+      <label for="search">Search Trades:</label>
+      <input type="text" id="search" oninput="filterTrades()">
+      <table>
+        <thead>
+          <tr>
+            <th>Date & Time</th>
+            <th>Instrument/Asset</th>
+            <th>Setup Type</th>
+            <th>Entry Point</th>
+            <th>Exit Point</th>
+            <th>Position Size</th>
+            <th>Stop Loss</th>
+            <th>Target</th>
+            <th>Reason</th>
+            <th>Emotion</th>
+            <th>Post-Trade Analysis</th>
+            <th>Tags</th>
+          </tr>
+        </thead>
+        <tbody id="tradeHistoryBody"></tbody>
+      </table>
+    </section>
   </div>
-
-  <!-- Simulation Mode Indicator -->
-  <div id="simulationIndicator" class="simulation-indicator">
-    Simulation Mode: Inactive (Trades will be saved permanently)
-  </div>
-
-  <!-- Trading Form to Add Trade -->
-  <h3>Add a New Trade</h3>
-  <form id="tradeForm">
-    <label for="dateTime">Date & Time:</label>
-    <input type="datetime-local" id="dateTime" required>
-
-    <label for="instrument">Instrument/Asset:</label>
-    <input type="text" id="instrument" required>
-
-    <label for="setupType">Setup Type (Technical/Fundamental):</label>
-    <select id="setupType" required>
-      <option value="Technical">Technical</option>
-      <option value="Fundamental">Fundamental</option>
-    </select>
-
-    <label for="entryPoint">Entry Point:</label>
-    <input type="text" id="entryPoint" required>
-
-    <label for="exitPoint">Exit Point:</label>
-    <input type="text" id="exitPoint" required>
-
-    <label for="positionSize">Position Size:</label>
-    <input type="number" id="positionSize" required>
-
-    <label for="stopLoss">Stop Loss:</label>
-    <input type="text" id="stopLoss" required>
-
-    <label for="target">Target:</label>
-    <input type="text" id="target" required>
-
-    <label for="reason">Reason for Trade:</label>
-    <textarea id="reason" rows="3" required></textarea>
-
-    <label for="emotion">Emotion Before/During/After:</label>
-    <textarea id="emotion" rows="3" required></textarea>
-
-    <label for="postTradeAnalysis">Post-Trade Analysis (What went right/wrong):</label>
-    <textarea id="postTradeAnalysis" rows="3" required></textarea>
-
-    <button type="submit">Add Trade</button>
-  </form>
-
-  <!-- Simulated Trades Display Table -->
-  <h3>Trade History</h3>
-  <table id="tradeHistoryTable">
-    <thead>
-      <tr>
-        <th>Date & Time</th>
-        <th>Instrument</th>
-        <th>Setup Type</th>
-        <th>Entry Point</th>
-        <th>Exit Point</th>
-        <th>Position Size</th>
-        <th>Stop Loss</th>
-        <th>Target</th>
-        <th>Reason for Trade</th>
-        <th>Emotion</th>
-        <th>Post-Trade Analysis</th>
-      </tr>
-    </thead>
-    <tbody id="tradeHistoryBody">
-      <!-- Trade history will be inserted here -->
-    </tbody>
-  </table>
 
   <script>
+    // JavaScript code for functionality
+
     let tradeHistory = [];
 
-    // Handle form submission and add trade to history
-    document.getElementById('tradeForm').addEventListener('submit', function(event) {
+    document.getElementById('tradeFormContent').addEventListener('submit', function(event) {
       event.preventDefault();
 
-      // Get the trade data from the form
+      // Validation check
+      const requiredFields = ['dateTime', 'instrument', 'setupType', 'entryPoint', 'exitPoint', 'positionSize', 'stopLoss', 'target', 'reason', 'emotion', 'postTradeAnalysis'];
+      let isFormValid = true;
+      requiredFields.forEach(field => {
+        const inputElement = document.getElementById(field);
+        if (!inputElement.value) {
+          isFormValid = false;
+          inputElement.style.borderColor = 'red';
+        } else {
+          inputElement.style.borderColor = '';
+        }
+      });
+
+      if (!isFormValid) {
+        alert('Please fill out all required fields.');
+        return;
+      }
+
       const trade = {
         dateTime: document.getElementById('dateTime').value,
         instrument: document.getElementById('instrument').value,
@@ -246,15 +199,16 @@
         reason: document.getElementById('reason').value,
         emotion: document.getElementById('emotion').value,
         postTradeAnalysis: document.getElementById('postTradeAnalysis').value,
+        tags: document.getElementById('tags').value.split(',').map(tag => tag.trim())
       };
 
-      // Add trade to history and reset form
       tradeHistory.push(trade);
       displayTradeHistory();
-      document.getElementById('tradeForm').reset();
+      calculateStatistics();
+      displayPerformanceChart();
+      document.getElementById('tradeFormContent').reset();
     });
 
-    // Display trade history in table
     function displayTradeHistory() {
       const tableBody = document.getElementById('tradeHistoryBody');
       tableBody.innerHTML = '';
@@ -272,28 +226,72 @@
           <td>${trade.reason}</td>
           <td>${trade.emotion}</td>
           <td>${trade.postTradeAnalysis}</td>
+          <td>${trade.tags.join(', ')}</td>
         `;
         tableBody.appendChild(row);
       });
     }
 
-    // Simulation Mode Toggle (Not used in this case, you can expand if needed)
-    let isSimulationMode = false;
-    function toggleSimulationMode() {
-      isSimulationMode = document.getElementById('simulationMode').checked;
-      updateSimulationIndicator();
+    function filterTrades() {
+      const searchTerm = document.getElementById('search').value.toLowerCase();
+      const filteredTrades = tradeHistory.filter(trade => {
+        return trade.instrument.toLowerCase().includes(searchTerm) ||
+               trade.reason.toLowerCase().includes(searchTerm);
+      });
+      displayTradeHistory(filteredTrades);
     }
 
-    // Update the simulation mode indicator
-    function updateSimulationIndicator() {
-      const indicator = document.getElementById('simulationIndicator');
-      if (isSimulationMode) {
-        indicator.textContent = "Simulation Mode: Active (Trades not saved permanently)";
-      } else {
-        indicator.textContent = "Regular Mode: Trades will be saved permanently";
+    function calculateStatistics() {
+      const totalTrades = tradeHistory.length;
+      const winCount = tradeHistory.filter(trade => trade.result === 'Win').length;
+      const lossCount = totalTrades - winCount;
+      const winLossRatio = (winCount / lossCount).toFixed(2);
+      const totalProfitLoss = tradeHistory.reduce((total, trade) => total + parseFloat(trade.profitLoss), 0);
+      const mostTradedInstrument = getMostTradedInstrument();
+
+      // Display statistics
+      document.getElementById('stats').innerHTML = `
+        Total Trades: ${totalTrades} <br>
+        Win/Loss Ratio: ${winLossRatio} <br>
+        Total Profit/Loss: $${totalProfitLoss.toFixed(2)} <br>
+        Most Traded Instrument: ${mostTradedInstrument}
+      `;
+    }
+
+    function getMostTradedInstrument() {
+      const instrumentCount = {};
+      tradeHistory.forEach(trade => {
+        instrumentCount[trade.instrument] = (instrumentCount[trade.instrument] || 0) + 1;
+      });
+
+      let mostTraded = '';
+      let maxCount = 0;
+      for (const instrument in instrumentCount) {
+        if (instrumentCount[instrument] > maxCount) {
+          mostTraded = instrument;
+          maxCount = instrumentCount[instrument];
+        }
       }
+      return mostTraded;
+    }
+
+    function displayPerformanceChart() {
+      const ctx = document.getElementById('performanceChart').getContext('2d');
+      const performanceChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: ['Wins', 'Losses'],
+          datasets: [{
+            data: [60, 40], // Example win/loss data
+            backgroundColor: ['#4CAF50', '#FF5733']
+          }]
+        }
+      });
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
     }
   </script>
-
 </body>
 </html>
