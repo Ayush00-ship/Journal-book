@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Trading Journal</title>
-  <link rel="stylesheet" href="styles.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     /* Add your CSS here */
@@ -45,7 +44,13 @@
       color: #fff;
     }
 
-    #tradeForm input, #tradeForm select, #tradeForm textarea {
+    .dark-mode button {
+      background-color: #5c6bc0;
+    }
+
+    #tradeForm input,
+    #tradeForm select,
+    #tradeForm textarea {
       width: 100%;
       padding: 10px;
       margin: 5px 0;
@@ -58,7 +63,8 @@
       border-collapse: collapse;
     }
 
-    .trade-history th, .trade-history td {
+    .trade-history th,
+    .trade-history td {
       padding: 10px;
       border: 1px solid #ddd;
       text-align: left;
@@ -66,6 +72,19 @@
 
     .trade-history th {
       background-color: #f4f4f4;
+    }
+
+    .trade-history tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    .dark-mode .trade-history th,
+    .dark-mode .trade-history td {
+      border-color: #444;
+    }
+
+    .dark-mode .trade-history th {
+      background-color: #555;
     }
 
     /* Make the app mobile responsive */
@@ -294,4 +313,4 @@
     }
   </script>
 </body>
-</html>
+</html
