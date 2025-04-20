@@ -10,11 +10,65 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
       padding: 0;
-      background: #f4f7fa;
-      color: #333;
+      background: linear-gradient(45deg, #f4f7fa, #f1f2f6);
       height: 100vh;
       overflow-x: hidden;
-      transition: background 0.3s ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Book Container */
+    .book-container {
+      display: flex;
+      height: 90%;
+      width: 80%;
+      background-color: #fff;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      border-radius: 15px;
+      overflow: hidden;
+      position: relative;
+      transform: rotateY(10deg);
+    }
+
+    /* Book Spine (Left Side) */
+    .book-spine {
+      width: 20%;
+      background-color: #34495E;
+      padding: 20px;
+      color: white;
+      text-align: center;
+      box-shadow: inset 5px 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .book-spine h2 {
+      font-size: 24px;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    .book-spine a {
+      display: block;
+      margin-top: 20px;
+      color: white;
+      text-decoration: none;
+      font-size: 18px;
+    }
+
+    .book-spine a:hover {
+      background-color: #2980B9;
+      padding: 5px;
+      border-radius: 5px;
+    }
+
+    /* Book Pages (Right Side) */
+    .book-pages {
+      width: 80%;
+      padding: 30px;
+      overflow-y: auto;
+      background: linear-gradient(45deg, #fff, #ecf0f1);
+      box-shadow: inset -5px 0 10px rgba(0, 0, 0, 0.05);
+      position: relative;
     }
 
     /* Header Styles */
@@ -42,18 +96,6 @@
 
     header button:hover {
       background-color: #3498DB;
-    }
-
-    /* Main Container */
-    .container {
-      width: 80%;
-      max-width: 1200px;
-      margin: 40px auto;
-      padding: 40px;
-      background-color: white;
-      border-radius: 12px;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-      transition: all 0.3s ease;
     }
 
     /* Form Styles */
@@ -179,18 +221,17 @@
 
     /* Mobile Responsiveness */
     @media (max-width: 768px) {
-      .container {
-        width: 100%;
-        padding: 20px;
-      }
-
-      #tradeForm input,
-      #tradeForm select,
-      #tradeForm textarea {
+      .book-container {
+        flex-direction: column;
         width: 100%;
       }
 
-      button {
+      .book-spine {
+        width: 100%;
+        text-align: center;
+      }
+
+      .book-pages {
         width: 100%;
       }
     }
@@ -198,104 +239,142 @@
 </head>
 <body>
 
-  <header>
-    <h1>Trade Journal</h1>
-    <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
-  </header>
-
-  <div class="container">
-    <form id="tradeForm">
-      <div>
-        <label for="date">Date & Time:</label>
-        <input type="datetime-local" id="date" required><br>
-      </div>
-
-      <div>
-        <label for="instrument">Instrument/Asset:</label>
-        <select id="instrument" required>
-          <option value="EUR/USD">EUR/USD (Forex)</option>
-          <option value="BTC/USD">BTC/USD (Crypto)</option>
-          <option value="AAPL">AAPL (Stock)</option>
-          <option value="GOLD">GOLD (Commodity)</option>
-        </select><br>
-      </div>
-
-      <div>
-        <label for="setup">Setup Type:</label>
-        <select id="setup" required>
-          <option value="Technical">Technical</option>
-          <option value="Fundamental">Fundamental</option>
-        </select><br>
-      </div>
-
-      <div>
-        <label for="entryExit">Entry/Exit Points:</label>
-        <input type="text" id="entryExit" required><br>
-      </div>
-
-      <div>
-        <label for="size">Position Size:</label>
-        <input type="number" id="size" required><br>
-      </div>
-
-      <div>
-        <label for="stopLoss">Stop Loss & Target:</label>
-        <input type="text" id="stopLoss" required><br>
-      </div>
-
-      <div>
-        <label for="reason">Reason for Trade:</label>
-        <textarea id="reason" required></textarea><br>
-      </div>
-
-      <div>
-        <label for="emotion">Emotion Before/During/After:</label>
-        <textarea id="emotion" required></textarea><br>
-      </div>
-
-      <div>
-        <label for="analysis">Post-Trade Analysis (What went right/wrong):</label>
-        <textarea id="analysis" required></textarea><br>
-      </div>
-
-      <button type="submit">Save Trade</button>
-    </form>
-
-    <div class="trade-history">
-      <h2>Trade History</h2>
-      <table id="tradeTable">
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Instrument</th>
-            <th>Setup</th>
-            <th>Entry/Exit</th>
-            <th>Size</th>
-            <th>Stop Loss & Target</th>
-            <th>Reason</th>
-            <th>Emotion</th>
-            <th>Post-Trade Analysis</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Trade records will go here -->
-        </tbody>
-      </table>
+  <!-- Book Container -->
+  <div class="book-container">
+    
+    <!-- Book Spine (Left Side) -->
+    <div class="book-spine">
+      <h2>Trade Journal</h2>
+      <a href="#">Home</a>
+      <a href="#">Trade Journal</a>
+      <a href="#">Statistics</a>
+      <a href="#">Settings</a>
+      <a href="#">Backup</a>
     </div>
 
-    <div id="tradeStats">
-      <h3>Trade Statistics</h3>
-      <p>Total Trades: <span id="totalTrades">0</span></p>
-      <p>Win/Loss Ratio: <span id="winLossRatio">N/A</span></p>
-      <p>Profit/Loss: <span id="profitLoss">N/A</span></p>
-      <p>Most Traded Instrument: <span id="mostTraded">N/A</span></p>
-      <p>Average Position Size: <span id="avgSize">N/A</span></p>
+    <!-- Book Pages (Right Side) -->
+    <div class="book-pages">
+      <header>
+        <h1>Trade Journal</h1>
+        <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
+      </header>
+
+      <div class="container">
+        <form id="tradeForm">
+          <div>
+            <label for="date">Date & Time:</label>
+            <input type="datetime-local" id="date" required><br>
+          </div>
+
+          <div>
+            <label for="instrument">Instrument/Asset:</label>
+            <select id="instrument" required>
+              <!-- Forex Pairs -->
+              <option value="EUR/USD">EUR/USD (Forex)</option>
+              <option value="GBP/USD">GBP/USD (Forex)</option>
+              <option value="USD/JPY">USD/JPY (Forex)</option>
+              <option value="AUD/USD">AUD/USD (Forex)</option>
+              <option value="NZD/USD">NZD/USD (Forex)</option>
+
+              <!-- Crypto Pairs -->
+              <option value="BTC/USD">BTC/USD (Crypto)</option>
+              <option value="ETH/USD">ETH/USD (Crypto)</option>
+              <option value="XRP/USD">XRP/USD (Crypto)</option>
+              <option value="LTC/USD">LTC/USD (Crypto)</option>
+              <option value="DOGE/USD">DOGE/USD (Crypto)</option>
+
+              <!-- Stock Pairs -->
+              <option value="AAPL">AAPL (Stock)</option>
+              <option value="GOOG">GOOG (Stock)</option>
+              <option value="AMZN">AMZN (Stock)</option>
+              <option value="TSLA">TSLA (Stock)</option>
+              <option value="MSFT">MSFT (Stock)</option>
+
+              <!-- Commodities -->
+              <option value="GOLD">GOLD (Commodity)</option>
+              <option value="SILVER">SILVER (Commodity)</option>
+              <option value="OIL">OIL (Commodity)</option>
+              <option value="COPPER">COPPER (Commodity)</option>
+            </select><br>
+          </div>
+
+          <div>
+            <label for="setup">Setup Type:</label>
+            <select id="setup" required>
+              <option value="Technical">Technical</option>
+              <option value="Fundamental">Fundamental</option>
+            </select><br>
+          </div>
+
+          <div>
+            <label for="entryExit">Entry/Exit Points:</label>
+            <input type="text" id="entryExit" required><br>
+          </div>
+
+          <div>
+            <label for="size">Position Size:</label>
+            <input type="number" id="size" required><br>
+          </div>
+
+          <div>
+            <label for="stopLoss">Stop Loss & Target:</label>
+            <input type="text" id="stopLoss" required><br>
+          </div>
+
+          <div>
+            <label for="reason">Reason for Trade:</label>
+            <textarea id="reason" required></textarea><br>
+          </div>
+
+          <div>
+            <label for="emotion">Emotion Before/During/After:</label>
+            <textarea id="emotion" required></textarea><br>
+          </div>
+
+          <div>
+            <label for="analysis">Post-Trade Analysis (What went right/wrong):</label>
+            <textarea id="analysis" required></textarea><br>
+          </div>
+
+          <button type="submit">Save Trade</button>
+        </form>
+
+        <div class="trade-history">
+          <h2>Trade History</h2>
+          <table id="tradeTable">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Instrument</th>
+                <th>Setup</th>
+                <th>Entry/Exit</th>
+                <th>Size</th>
+                <th>Stop Loss & Target</th>
+                <th>Reason</th>
+                <th>Emotion</th>
+                <th>Post-Trade Analysis</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Trade records will go here -->
+            </tbody>
+          </table>
+        </div>
+
+        <div id="tradeStats">
+          <h3>Trade Statistics</h3>
+          <p>Total Trades: <span id="totalTrades">0</span></p>
+          <p>Win/Loss Ratio: <span id="winLossRatio">N/A</span></p>
+          <p>Profit/Loss: <span id="profitLoss">N/A</span></p>
+          <p>Most Traded Instrument: <span id="mostTraded">N/A</span></p>
+          <p>Average Position Size: <span id="avgSize">N/A</span></p>
+        </div>
+      </div>
     </div>
   </div>
 
   <script>
     let darkMode = false;
-    let tradeData = [];
 
     // Toggle dark mode
     function toggleDarkMode() {
@@ -307,57 +386,10 @@
     document.getElementById('tradeForm').addEventListener('submit', function(event) {
       event.preventDefault();
 
-      const date = document.getElementById('date').value;
-      const instrument = document.getElementById('instrument').value;
-      const setup = document.getElementById('setup').value;
-      const entryExit = document.getElementById('entryExit').value;
-      const size = document.getElementById('size').value;
-      const stopLoss = document.getElementById('stopLoss').value;
-      const reason = document.getElementById('reason').value;
-      const emotion = document.getElementById('emotion').value;
-      const analysis = document.getElementById('analysis').value;
-
-      const trade = { date, instrument, setup, entryExit, size, stopLoss, reason, emotion, analysis };
-
-      // Save trade data
-      tradeData.push(trade);
-      updateTradeTable();
-      updateTradeStats();
-      document.getElementById('tradeForm').reset();
+      // Add form submission functionality here
     });
-
-    // Update trade history table
-    function updateTradeTable() {
-      const tableBody = document.querySelector('#tradeTable tbody');
-      tableBody.innerHTML = '';
-      tradeData.forEach(trade => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${trade.date}</td>
-          <td>${trade.instrument}</td>
-          <td>${trade.setup}</td>
-          <td>${trade.entryExit}</td>
-          <td>${trade.size}</td>
-          <td>${trade.stopLoss}</td>
-          <td>${trade.reason}</td>
-          <td>${trade.emotion}</td>
-          <td>${trade.analysis}</td>
-        `;
-        tableBody.appendChild(row);
-      });
-    }
-
-    // Update trade stats
-    function updateTradeStats() {
-      document.getElementById('totalTrades').textContent = tradeData.length;
-
-      // Placeholder for further stats calculations (Win/Loss, Profit/Loss, etc.)
-      document.getElementById('winLossRatio').textContent = 'N/A';
-      document.getElementById('profitLoss').textContent = 'N/A';
-      document.getElementById('mostTraded').textContent = 'N/A';
-      document.getElementById('avgSize').textContent = 'N/A';
-    }
   </script>
 
 </body>
 </html>
+
