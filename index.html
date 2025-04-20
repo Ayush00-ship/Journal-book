@@ -12,37 +12,41 @@
       padding: 0;
       background: linear-gradient(45deg, #f4f7fa, #f1f2f6);
       height: 100vh;
-      overflow-x: hidden;
       display: flex;
       justify-content: center;
       align-items: center;
+      overflow-x: hidden;
+      transition: background-color 0.5s ease-in-out;
     }
 
-    /* Book Container */
+    /* Book Container with 3D Effect */
     .book-container {
       display: flex;
       height: 90%;
-      width: 80%;
+      width: 75%;
       background-color: #fff;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-      border-radius: 15px;
+      border-radius: 20px;
       overflow: hidden;
       position: relative;
-      transform: rotateY(10deg);
+      transform: rotateY(5deg);
+      transition: transform 0.5s ease-in-out, box-shadow 0.5s ease-in-out;
     }
 
     /* Book Spine (Left Side) */
     .book-spine {
       width: 20%;
       background-color: #34495E;
-      padding: 20px;
+      padding: 30px 20px;
       color: white;
       text-align: center;
       box-shadow: inset 5px 0 10px rgba(0, 0, 0, 0.1);
+      position: relative;
+      z-index: 2;
     }
 
     .book-spine h2 {
-      font-size: 24px;
+      font-size: 28px;
       font-weight: bold;
       margin: 0;
     }
@@ -53,6 +57,7 @@
       color: white;
       text-decoration: none;
       font-size: 18px;
+      transition: background-color 0.3s ease;
     }
 
     .book-spine a:hover {
@@ -64,11 +69,11 @@
     /* Book Pages (Right Side) */
     .book-pages {
       width: 80%;
-      padding: 30px;
+      padding: 40px;
       overflow-y: auto;
       background: linear-gradient(45deg, #fff, #ecf0f1);
-      box-shadow: inset -5px 0 10px rgba(0, 0, 0, 0.05);
       position: relative;
+      z-index: 1;
     }
 
     /* Header Styles */
@@ -81,13 +86,14 @@
       letter-spacing: 1px;
       border-radius: 0 0 20px 20px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
     }
 
     header button {
       background-color: #2980B9;
       color: white;
       border: none;
-      padding: 10px 20px;
+      padding: 12px 25px;
       border-radius: 25px;
       font-size: 16px;
       cursor: pointer;
@@ -224,6 +230,7 @@
       .book-container {
         flex-direction: column;
         width: 100%;
+        transform: rotateY(0deg);
       }
 
       .book-spine {
@@ -232,6 +239,16 @@
       }
 
       .book-pages {
+        width: 100%;
+      }
+
+      header {
+        font-size: 24px;
+      }
+
+      #tradeForm input,
+      #tradeForm select,
+      #tradeForm textarea {
         width: 100%;
       }
     }
@@ -295,101 +312,3 @@
               <option value="SILVER">SILVER (Commodity)</option>
               <option value="OIL">OIL (Commodity)</option>
               <option value="COPPER">COPPER (Commodity)</option>
-            </select><br>
-          </div>
-
-          <div>
-            <label for="setup">Setup Type:</label>
-            <select id="setup" required>
-              <option value="Technical">Technical</option>
-              <option value="Fundamental">Fundamental</option>
-            </select><br>
-          </div>
-
-          <div>
-            <label for="entryExit">Entry/Exit Points:</label>
-            <input type="text" id="entryExit" required><br>
-          </div>
-
-          <div>
-            <label for="size">Position Size:</label>
-            <input type="number" id="size" required><br>
-          </div>
-
-          <div>
-            <label for="stopLoss">Stop Loss & Target:</label>
-            <input type="text" id="stopLoss" required><br>
-          </div>
-
-          <div>
-            <label for="reason">Reason for Trade:</label>
-            <textarea id="reason" required></textarea><br>
-          </div>
-
-          <div>
-            <label for="emotion">Emotion Before/During/After:</label>
-            <textarea id="emotion" required></textarea><br>
-          </div>
-
-          <div>
-            <label for="analysis">Post-Trade Analysis (What went right/wrong):</label>
-            <textarea id="analysis" required></textarea><br>
-          </div>
-
-          <button type="submit">Save Trade</button>
-        </form>
-
-        <div class="trade-history">
-          <h2>Trade History</h2>
-          <table id="tradeTable">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Instrument</th>
-                <th>Setup</th>
-                <th>Entry/Exit</th>
-                <th>Size</th>
-                <th>Stop Loss & Target</th>
-                <th>Reason</th>
-                <th>Emotion</th>
-                <th>Post-Trade Analysis</th>
-              </tr>
-            </thead>
-            <tbody>
-              <!-- Trade records will go here -->
-            </tbody>
-          </table>
-        </div>
-
-        <div id="tradeStats">
-          <h3>Trade Statistics</h3>
-          <p>Total Trades: <span id="totalTrades">0</span></p>
-          <p>Win/Loss Ratio: <span id="winLossRatio">N/A</span></p>
-          <p>Profit/Loss: <span id="profitLoss">N/A</span></p>
-          <p>Most Traded Instrument: <span id="mostTraded">N/A</span></p>
-          <p>Average Position Size: <span id="avgSize">N/A</span></p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    let darkMode = false;
-
-    // Toggle dark mode
-    function toggleDarkMode() {
-      darkMode = !darkMode;
-      document.body.classList.toggle('dark-mode', darkMode);
-    }
-
-    // Handle form submission
-    document.getElementById('tradeForm').addEventListener('submit', function(event) {
-      event.preventDefault();
-
-      // Add form submission functionality here
-    });
-  </script>
-
-</body>
-</html>
-
