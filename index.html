@@ -3,314 +3,297 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Trading Journal</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <title>Trade Journal</title>
   <style>
-    /* Add your CSS here */
+    /* General Styles */
     body {
       font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      color: #333;
       margin: 0;
       padding: 0;
+      background: linear-gradient(135deg, #f5f7fa, #c3cfe2); /* Gradient background */
+      color: #333;
+      height: 100vh;
     }
 
+    /* Container Styles */
     .container {
       width: 90%;
       margin: 0 auto;
+      padding: 20px;
+      background-color: rgba(255, 255, 255, 0.8); /* Light transparent white */
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      margin-top: 30px;
     }
 
     header {
-      background-color: #333;
-      color: #fff;
-      padding: 10px;
+      background-color: #4CAF50;
+      color: white;
+      padding: 15px 20px;
       text-align: center;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
 
+    /* Button Styles */
     button {
       background-color: #4CAF50;
       color: white;
       padding: 10px 20px;
       border: none;
       cursor: pointer;
+      border-radius: 5px;
     }
 
     button:hover {
       background-color: #45a049;
     }
 
+    .dark-mode button {
+      background-color: #5c6bc0;
+    }
+
+    .dark-mode button:hover {
+      background-color: #3f51b5;
+    }
+
+    /* Form Styles */
+    #tradeForm input,
+    #tradeForm select,
+    #tradeForm textarea {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      box-sizing: border-box;
+      border: 2px solid #ddd;
+      border-radius: 5px;
+    }
+
+    #tradeForm input:focus,
+    #tradeForm select:focus,
+    #tradeForm textarea:focus {
+      border-color: #4CAF50;
+      outline: none;
+    }
+
+    /* Table Styles */
+    .trade-history table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+      background-color: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .trade-history th,
+    .trade-history td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .trade-history th {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    .trade-history tr:nth-child(even) {
+      background-color: #f4f4f4;
+    }
+
+    /* Dark Mode Styling */
     .dark-mode {
       background-color: #333;
       color: #fff;
     }
 
-    .dark-mode button {
-      background-color: #5c6bc0;
+    .dark-mode .container {
+      background-color: rgba(0, 0, 0, 0.8);
     }
 
-    #tradeForm input,
-    #tradeForm select,
-    #tradeForm textarea {
-      width: 100%;
-      padding: 10px;
-      margin: 5px 0;
-      box-sizing: border-box;
+    .dark-mode header {
+      background-color: #333;
     }
 
-    .trade-history table {
-      width: 100%;
-      margin-top: 20px;
-      border-collapse: collapse;
+    .dark-mode #tradeForm input,
+    .dark-mode #tradeForm select,
+    .dark-mode #tradeForm textarea {
+      background-color: #444;
+      color: #fff;
+      border-color: #666;
     }
 
-    .trade-history th,
-    .trade-history td {
-      padding: 10px;
-      border: 1px solid #ddd;
-      text-align: left;
-    }
-
-    .trade-history th {
-      background-color: #f4f4f4;
-    }
-
-    .trade-history tr:nth-child(even) {
-      background-color: #f9f9f9;
+    .dark-mode .trade-history {
+      background-color: #444;
     }
 
     .dark-mode .trade-history th,
     .dark-mode .trade-history td {
-      border-color: #444;
+      color: #fff;
     }
 
-    .dark-mode .trade-history th {
-      background-color: #555;
+    /* Stats Section */
+    #tradeStats {
+      margin-top: 20px;
+      padding: 20px;
+      background-color: rgba(255, 255, 255, 0.8);
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
 
-    /* Make the app mobile responsive */
+    /* Mobile Responsiveness */
     @media (max-width: 768px) {
       .container {
         width: 100%;
       }
     }
+
   </style>
 </head>
 <body>
+
+  <header>
+    <h1>Trade Journal</h1>
+    <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
+  </header>
+
   <div class="container">
-    <header>
-      <h1>Trading Journal</h1>
-      <button id="darkModeToggle" onclick="toggleDarkMode()">Toggle Dark Mode</button>
-    </header>
+    <form id="tradeForm">
+      <label for="date">Date & Time:</label>
+      <input type="datetime-local" id="date" required><br>
 
-    <section id="tradeForm">
-      <h2>Record Your Trade</h2>
-      <form id="tradeFormContent">
-        <label for="dateTime">Date & Time:</label>
-        <input type="datetime-local" id="dateTime" required><br>
+      <label for="instrument">Instrument/Asset:</label>
+      <select id="instrument" required>
+        <option value="EUR/USD">EUR/USD (Forex)</option>
+        <option value="BTC/USD">BTC/USD (Crypto)</option>
+        <option value="AAPL">AAPL (Stock)</option>
+        <option value="GOLD">GOLD (Commodity)</option>
+      </select><br>
 
-        <label for="instrument">Instrument/Asset:</label>
-        <input type="text" id="instrument" required><br>
+      <label for="setup">Setup Type:</label>
+      <select id="setup" required>
+        <option value="Technical">Technical</option>
+        <option value="Fundamental">Fundamental</option>
+      </select><br>
 
-        <label for="setupType">Setup Type (Technical/Fundamental):</label>
-        <select id="setupType" required>
-          <option value="technical">Technical</option>
-          <option value="fundamental">Fundamental</option>
-        </select><br>
+      <label for="entryExit">Entry/Exit Points:</label>
+      <input type="text" id="entryExit" required><br>
 
-        <label for="entryPoint">Entry Point:</label>
-        <input type="number" id="entryPoint" step="any" required><br>
+      <label for="size">Position Size:</label>
+      <input type="number" id="size" required><br>
 
-        <label for="exitPoint">Exit Point:</label>
-        <input type="number" id="exitPoint" step="any" required><br>
+      <label for="stopLoss">Stop Loss & Target:</label>
+      <input type="text" id="stopLoss" required><br>
 
-        <label for="positionSize">Position Size:</label>
-        <input type="number" id="positionSize" step="any" required><br>
+      <label for="reason">Reason for Trade:</label>
+      <textarea id="reason" required></textarea><br>
 
-        <label for="stopLoss">Stop Loss:</label>
-        <input type="number" id="stopLoss" step="any" required><br>
+      <label for="emotion">Emotion Before/During/After:</label>
+      <textarea id="emotion" required></textarea><br>
 
-        <label for="target">Target:</label>
-        <input type="number" id="target" step="any" required><br>
+      <label for="analysis">Post-Trade Analysis (What went right/wrong):</label>
+      <textarea id="analysis" required></textarea><br>
 
-        <label for="reason">Reason for Trade:</label>
-        <textarea id="reason" required></textarea><br>
+      <button type="submit">Save Trade</button>
+    </form>
 
-        <label for="emotion">Emotion Before/During/After:</label>
-        <textarea id="emotion" required></textarea><br>
-
-        <label for="postTradeAnalysis">Post-Trade Analysis (What went right/wrong):</label>
-        <textarea id="postTradeAnalysis" required></textarea><br>
-
-        <label for="tags">Tags (e.g., "Long", "Scalping"):</label>
-        <input type="text" id="tags" placeholder="Enter tags separated by commas"><br>
-
-        <button type="submit">Save Trade</button>
-      </form>
-    </section>
-
-    <section id="tradeStats">
-      <h2>Trade Statistics</h2>
-      <p id="stats"></p>
-      <canvas id="performanceChart" width="400" height="400"></canvas>
-    </section>
-
-    <section class="trade-history">
+    <div class="trade-history">
       <h2>Trade History</h2>
-      <label for="search">Search Trades:</label>
-      <input type="text" id="search" oninput="filterTrades()">
-      <table>
+      <table id="tradeTable">
         <thead>
           <tr>
-            <th>Date & Time</th>
-            <th>Instrument/Asset</th>
-            <th>Setup Type</th>
-            <th>Entry Point</th>
-            <th>Exit Point</th>
-            <th>Position Size</th>
-            <th>Stop Loss</th>
-            <th>Target</th>
+            <th>Date</th>
+            <th>Instrument</th>
+            <th>Setup</th>
+            <th>Entry/Exit</th>
+            <th>Size</th>
+            <th>Stop Loss & Target</th>
             <th>Reason</th>
             <th>Emotion</th>
             <th>Post-Trade Analysis</th>
-            <th>Tags</th>
           </tr>
         </thead>
-        <tbody id="tradeHistoryBody"></tbody>
+        <tbody>
+          <!-- Trade records will go here -->
+        </tbody>
       </table>
-    </section>
+    </div>
+
+    <div id="tradeStats">
+      <h3>Trade Statistics</h3>
+      <p>Total Trades: <span id="totalTrades">0</span></p>
+      <p>Win/Loss Ratio: <span id="winLossRatio">N/A</span></p>
+      <p>Profit/Loss: <span id="profitLoss">N/A</span></p>
+      <p>Most Traded Instrument: <span id="mostTraded">N/A</span></p>
+      <p>Average Position Size: <span id="avgSize">N/A</span></p>
+    </div>
   </div>
 
   <script>
-    // JavaScript code for functionality
+    let darkMode = false;
+    let tradeData = [];
 
-    let tradeHistory = [];
+    // Toggle dark mode
+    function toggleDarkMode() {
+      darkMode = !darkMode;
+      document.body.classList.toggle('dark-mode', darkMode);
+    }
 
-    document.getElementById('tradeFormContent').addEventListener('submit', function(event) {
+    // Handle form submission
+    document.getElementById('tradeForm').addEventListener('submit', function(event) {
       event.preventDefault();
 
-      // Validation check
-      const requiredFields = ['dateTime', 'instrument', 'setupType', 'entryPoint', 'exitPoint', 'positionSize', 'stopLoss', 'target', 'reason', 'emotion', 'postTradeAnalysis'];
-      let isFormValid = true;
-      requiredFields.forEach(field => {
-        const inputElement = document.getElementById(field);
-        if (!inputElement.value) {
-          isFormValid = false;
-          inputElement.style.borderColor = 'red';
-        } else {
-          inputElement.style.borderColor = '';
-        }
-      });
+      const date = document.getElementById('date').value;
+      const instrument = document.getElementById('instrument').value;
+      const setup = document.getElementById('setup').value;
+      const entryExit = document.getElementById('entryExit').value;
+      const size = document.getElementById('size').value;
+      const stopLoss = document.getElementById('stopLoss').value;
+      const reason = document.getElementById('reason').value;
+      const emotion = document.getElementById('emotion').value;
+      const analysis = document.getElementById('analysis').value;
 
-      if (!isFormValid) {
-        alert('Please fill out all required fields.');
-        return;
-      }
+      const trade = { date, instrument, setup, entryExit, size, stopLoss, reason, emotion, analysis };
 
-      const trade = {
-        dateTime: document.getElementById('dateTime').value,
-        instrument: document.getElementById('instrument').value,
-        setupType: document.getElementById('setupType').value,
-        entryPoint: document.getElementById('entryPoint').value,
-        exitPoint: document.getElementById('exitPoint').value,
-        positionSize: document.getElementById('positionSize').value,
-        stopLoss: document.getElementById('stopLoss').value,
-        target: document.getElementById('target').value,
-        reason: document.getElementById('reason').value,
-        emotion: document.getElementById('emotion').value,
-        postTradeAnalysis: document.getElementById('postTradeAnalysis').value,
-        tags: document.getElementById('tags').value.split(',').map(tag => tag.trim())
-      };
-
-      tradeHistory.push(trade);
-      displayTradeHistory();
-      calculateStatistics();
-      displayPerformanceChart();
-      document.getElementById('tradeFormContent').reset();
+      // Save trade data
+      tradeData.push(trade);
+      updateTradeTable();
+      updateTradeStats();
+      document.getElementById('tradeForm').reset();
     });
 
-    function displayTradeHistory() {
-      const tableBody = document.getElementById('tradeHistoryBody');
+    // Update trade history table
+    function updateTradeTable() {
+      const tableBody = document.querySelector('#tradeTable tbody');
       tableBody.innerHTML = '';
-      tradeHistory.forEach(trade => {
+      tradeData.forEach(trade => {
         const row = document.createElement('tr');
         row.innerHTML = `
-          <td>${trade.dateTime}</td>
+          <td>${trade.date}</td>
           <td>${trade.instrument}</td>
-          <td>${trade.setupType}</td>
-          <td>${trade.entryPoint}</td>
-          <td>${trade.exitPoint}</td>
-          <td>${trade.positionSize}</td>
+          <td>${trade.setup}</td>
+          <td>${trade.entryExit}</td>
+          <td>${trade.size}</td>
           <td>${trade.stopLoss}</td>
-          <td>${trade.target}</td>
           <td>${trade.reason}</td>
           <td>${trade.emotion}</td>
-          <td>${trade.postTradeAnalysis}</td>
-          <td>${trade.tags.join(', ')}</td>
+          <td>${trade.analysis}</td>
         `;
         tableBody.appendChild(row);
       });
     }
 
-    function filterTrades() {
-      const searchTerm = document.getElementById('search').value.toLowerCase();
-      const filteredTrades = tradeHistory.filter(trade => {
-        return trade.instrument.toLowerCase().includes(searchTerm) ||
-               trade.reason.toLowerCase().includes(searchTerm);
-      });
-      displayTradeHistory(filteredTrades);
-    }
+    // Update trade stats
+    function updateTradeStats() {
+      document.getElementById('totalTrades').textContent = tradeData.length;
 
-    function calculateStatistics() {
-      const totalTrades = tradeHistory.length;
-      const winCount = tradeHistory.filter(trade => trade.result === 'Win').length;
-      const lossCount = totalTrades - winCount;
-      const winLossRatio = (winCount / lossCount).toFixed(2);
-      const totalProfitLoss = tradeHistory.reduce((total, trade) => total + parseFloat(trade.profitLoss), 0);
-      const mostTradedInstrument = getMostTradedInstrument();
-
-      // Display statistics
-      document.getElementById('stats').innerHTML = `
-        Total Trades: ${totalTrades} <br>
-        Win/Loss Ratio: ${winLossRatio} <br>
-        Total Profit/Loss: $${totalProfitLoss.toFixed(2)} <br>
-        Most Traded Instrument: ${mostTradedInstrument}
-      `;
-    }
-
-    function getMostTradedInstrument() {
-      const instrumentCount = {};
-      tradeHistory.forEach(trade => {
-        instrumentCount[trade.instrument] = (instrumentCount[trade.instrument] || 0) + 1;
-      });
-
-      let mostTraded = '';
-      let maxCount = 0;
-      for (const instrument in instrumentCount) {
-        if (instrumentCount[instrument] > maxCount) {
-          mostTraded = instrument;
-          maxCount = instrumentCount[instrument];
-        }
-      }
-      return mostTraded;
-    }
-
-    function displayPerformanceChart() {
-      const ctx = document.getElementById('performanceChart').getContext('2d');
-      const performanceChart = new Chart(ctx, {
-        type: 'pie',
-        data: {
-          labels: ['Wins', 'Losses'],
-          datasets: [{
-            data: [60, 40], // Example win/loss data
-            backgroundColor: ['#4CAF50', '#FF5733']
-          }]
-        }
-      });
-    }
-
-    function toggleDarkMode() {
-      document.body.classList.toggle('dark-mode');
+      // Placeholder for further stats calculations (Win/Loss, Profit/Loss, etc.)
+      document.getElementById('winLossRatio').textContent = 'N/A';
+      document.getElementById('profitLoss').textContent = 'N/A';
+      document.getElementById('mostTraded').textContent = 'N/A';
+      document.getElementById('avgSize').textContent = 'N/A';
     }
   </script>
 </body>
-</html
+</html>
