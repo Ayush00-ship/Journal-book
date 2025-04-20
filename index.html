@@ -19,10 +19,13 @@
     }
 
     .simulation-toggle,
-    .buttons-container {
+    .buttons-container,
+    .backup-section {
       margin-bottom: 20px;
       display: flex;
       justify-content: center;
+      flex-direction: column;
+      align-items: center;
     }
 
     .simulation-toggle label {
@@ -37,12 +40,7 @@
       margin-bottom: 20px;
     }
 
-    .backup-section {
-      margin-bottom: 20px;
-      text-align: center;
-    }
-
-    button {
+    .buttons-container button {
       padding: 12px 25px;
       background-color: #4CAF50;
       color: white;
@@ -54,10 +52,34 @@
       transition: background-color 0.3s ease;
     }
 
-    button:hover {
+    .buttons-container button:hover {
       background-color: #45a049;
     }
 
+    /* Form Styles */
+    form {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 20px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    label {
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    input, select {
+      padding: 10px;
+      margin-bottom: 10px;
+      font-size: 14px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+
+    /* Table styles */
     table {
       width: 100%;
       border-collapse: collapse;
@@ -86,12 +108,13 @@
         padding: 10px;
       }
 
-      button {
+      .buttons-container button {
         font-size: 14px;
         padding: 10px 20px;
+        width: 100%;
       }
 
-      .simulation-toggle, .buttons-container {
+      .simulation-toggle {
         flex-direction: column;
         align-items: center;
       }
@@ -112,12 +135,15 @@
         margin: 10px 0;
       }
 
-      .buttons-container button {
-        width: 100%;
-      }
-
       .simulation-toggle {
         text-align: center;
+      }
+
+      table {
+        font-size: 12px;
+        overflow-x: auto;
+        display: block;
+        white-space: nowrap;
       }
     }
   </style>
@@ -135,40 +161,130 @@
     Simulation Mode: Inactive (Trades will be saved permanently)
   </div>
 
-  <!-- Buttons for Simulated Trades -->
-  <div class="buttons-container">
-    <button onclick="simulateTrade()">Simulate a Trade</button>
-    <button onclick="resetSimulatedTrades()">Reset Simulation Trades</button>
-  </div>
+  <!-- Trading Form to Add Trade -->
+  <h3>Add a New Trade</h3>
+  <form id="tradeForm">
+    <label for="dateTime">Date & Time:</label>
+    <input type="datetime-local" id="dateTime" required>
+
+    <label for="instrument">Instrument/Asset:</label>
+    <input type="text" id="instrument" required>
+
+    <label for="setupType">Setup Type (Technical/Fundamental):</label>
+    <select id="setupType" required>
+      <option value="Technical">Technical</option>
+      <option value="Fundamental">Fundamental</option>
+    </select>
+
+    <label for="entryPoint">Entry Point:</label>
+    <input type="text" id="entryPoint" required>
+
+    <label for="exitPoint">Exit Point:</label>
+    <input type="text" id="exitPoint" required>
+
+    <label for="positionSize">Position Size:</label>
+    <input type="number" id="positionSize" required>
+
+    <label for="stopLoss">Stop Loss:</label>
+    <input type="text" id="stopLoss" required>
+
+    <label for="target">Target:</label>
+    <input type="text" id="target" required>
+
+    <label for="reason">Reason for Trade:</label>
+    <textarea id="reason" rows="3" required></textarea>
+
+    <label for="emotion">Emotion Before/During/After:</label>
+    <textarea id="emotion" rows="3" required></textarea>
+
+    <label for="postTradeAnalysis">Post-Trade Analysis (What went right/wrong):</label>
+    <textarea id="postTradeAnalysis" rows="3" required></textarea>
+
+    <button type="submit">Add Trade</button>
+  </form>
 
   <!-- Simulated Trades Display Table -->
-  <h3>Simulated Trades</h3>
-  <table id="simulatedTradesTable">
+  <h3>Trade History</h3>
+  <table id="tradeHistoryTable">
     <thead>
       <tr>
-        <th>Date</th>
+        <th>Date & Time</th>
         <th>Instrument</th>
-        <th>Entry</th>
-        <th>Exit</th>
+        <th>Setup Type</th>
+        <th>Entry Point</th>
+        <th>Exit Point</th>
         <th>Position Size</th>
+        <th>Stop Loss</th>
+        <th>Target</th>
+        <th>Reason for Trade</th>
+        <th>Emotion</th>
+        <th>Post-Trade Analysis</th>
       </tr>
     </thead>
-    <tbody id="simulatedTradesBody">
-      <!-- Simulated trades will be inserted here -->
+    <tbody id="tradeHistoryBody">
+      <!-- Trade history will be inserted here -->
     </tbody>
   </table>
 
   <script>
-    let isSimulationMode = false;
-    let simulatedTrades = [];
+    let tradeHistory = [];
 
-    // Toggle Simulation Mode
+    // Handle form submission and add trade to history
+    document.getElementById('tradeForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      // Get the trade data from the form
+      const trade = {
+        dateTime: document.getElementById('dateTime').value,
+        instrument: document.getElementById('instrument').value,
+        setupType: document.getElementById('setupType').value,
+        entryPoint: document.getElementById('entryPoint').value,
+        exitPoint: document.getElementById('exitPoint').value,
+        positionSize: document.getElementById('positionSize').value,
+        stopLoss: document.getElementById('stopLoss').value,
+        target: document.getElementById('target').value,
+        reason: document.getElementById('reason').value,
+        emotion: document.getElementById('emotion').value,
+        postTradeAnalysis: document.getElementById('postTradeAnalysis').value,
+      };
+
+      // Add trade to history and reset form
+      tradeHistory.push(trade);
+      displayTradeHistory();
+      document.getElementById('tradeForm').reset();
+    });
+
+    // Display trade history in table
+    function displayTradeHistory() {
+      const tableBody = document.getElementById('tradeHistoryBody');
+      tableBody.innerHTML = '';
+      tradeHistory.forEach(trade => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${trade.dateTime}</td>
+          <td>${trade.instrument}</td>
+          <td>${trade.setupType}</td>
+          <td>${trade.entryPoint}</td>
+          <td>${trade.exitPoint}</td>
+          <td>${trade.positionSize}</td>
+          <td>${trade.stopLoss}</td>
+          <td>${trade.target}</td>
+          <td>${trade.reason}</td>
+          <td>${trade.emotion}</td>
+          <td>${trade.postTradeAnalysis}</td>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
+
+    // Simulation Mode Toggle (Not used in this case, you can expand if needed)
+    let isSimulationMode = false;
     function toggleSimulationMode() {
       isSimulationMode = document.getElementById('simulationMode').checked;
       updateSimulationIndicator();
     }
 
-    // Update the indicator
+    // Update the simulation mode indicator
     function updateSimulationIndicator() {
       const indicator = document.getElementById('simulationIndicator');
       if (isSimulationMode) {
@@ -176,53 +292,6 @@
       } else {
         indicator.textContent = "Regular Mode: Trades will be saved permanently";
       }
-    }
-
-    // Add simulated trade
-    function addTrade(trade) {
-      if (isSimulationMode) {
-        simulatedTrades.push(trade);
-        displaySimulatedTrades();
-      }
-      else {
-        // Save to permanent trades (for real trades)
-        console.log("Trade added to permanent journal:", trade);
-      }
-    }
-
-    // Simulate Trade
-    function simulateTrade() {
-      const simulatedTrade = {
-        date: new Date(),
-        instrument: "EUR/USD",
-        entryPoint: "1.1800",
-        exitPoint: "1.1850",
-        positionSize: "1.0",
-      };
-      addTrade(simulatedTrade);
-    }
-
-    // Display Simulated Trades
-    function displaySimulatedTrades() {
-      const tableBody = document.getElementById('simulatedTradesBody');
-      tableBody.innerHTML = '';
-      simulatedTrades.forEach(trade => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${trade.date}</td>
-          <td>${trade.instrument}</td>
-          <td>${trade.entryPoint}</td>
-          <td>${trade.exitPoint}</td>
-          <td>${trade.positionSize}</td>
-        `;
-        tableBody.appendChild(row);
-      });
-    }
-
-    // Reset simulated trades
-    function resetSimulatedTrades() {
-      simulatedTrades = [];
-      displaySimulatedTrades();
     }
   </script>
 
