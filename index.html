@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -71,14 +70,27 @@
   <h1>Trade Journal</h1>
   <form id="tradeForm">
     <input type="datetime-local" id="datetime" required />
-    <input type="text" id="instrument" placeholder="Instrument/Asset (e.g. EUR/USD, BTC/USDT)" required />
+    
+    <select id="assetType" required>
+      <option value="" disabled selected>Select Asset Type</option>
+      <option value="forex">Forex</option>
+      <option value="crypto">Crypto</option>
+      <option value="stock">Stock</option>
+    </select>
+
+    <select id="instrument" required>
+      <option value="" disabled selected>Select Instrument</option>
+    </select>
+
     <select id="setup">
       <option value="Technical">Technical</option>
       <option value="Fundamental">Fundamental</option>
     </select>
-    <input type="text" id="entryExit" placeholder="Entry/Exit Points (e.g. 1.0920/1.0960)" required />
-    <input type="text" id="size" placeholder="Position Size (e.g. 1 Lot)" required />
-    <input type="text" id="stopTarget" placeholder="Stop Loss & Target (e.g. 1.0900 / 1.1000)" required />
+    
+    <input type="text" id="entryExit" placeholder="Entry/Exit Points" required />
+    <input type="text" id="size" placeholder="Position Size" required />
+    <input type="text" id="stopTarget" placeholder="Stop Loss & Target" required />
+    
     <select id="reason" required>
       <option value="" disabled selected>Reason for Trade</option>
       <option>Breakout</option>
@@ -87,10 +99,14 @@
       <option>Trend Following</option>
       <option>Reversal</option>
       <option>Scalping Setup</option>
+      <option>Technical Pattern</option>
+      <option>Volume Spike</option>
       <option>Other</option>
     </select>
+    
     <textarea id="emotion" placeholder="Emotion Before/During/After" rows="2"></textarea>
-    <textarea id="analysis" placeholder="Post-Trade Analysis (What went right/wrong)" rows="2"></textarea>
+    <textarea id="analysis" placeholder="Post-Trade Analysis" rows="2"></textarea>
+    
     <button type="submit">Save Trade</button>
   </form>
 
@@ -99,6 +115,33 @@
   <script>
     const form = document.getElementById('tradeForm');
     const tradeList = document.getElementById('tradeList');
+    const assetType = document.getElementById('assetType');
+    const instrument = document.getElementById('instrument');
+
+    const forexPairs = [
+      "EUR/USD", "GBP/USD", "USD/JPY", "USD/CHF", "AUD/USD", "NZD/USD", "USD/CAD", "EUR/JPY", "GBP/JPY"
+    ];
+    const cryptoPairs = [
+      "BTC/USDT", "ETH/USDT", "BNB/USDT", "XRP/USDT", "ADA/USDT", "DOGE/USDT", "SOL/USDT", "DOT/USDT"
+    ];
+    const stockSymbols = [
+      "AAPL", "MSFT", "GOOGL", "AMZN", "TSLA", "META", "NFLX", "NVDA", "AMD", "BABA"
+    ];
+
+    function updateInstruments() {
+      const type = assetType.value;
+      let options = ['<option value="" disabled selected>Select Instrument</option>'];
+      if (type === 'forex') {
+        forexPairs.forEach(p => options.push(`<option value="${p}">${p}</option>`));
+      } else if (type === 'crypto') {
+        cryptoPairs.forEach(p => options.push(`<option value="${p}">${p}</option>`));
+      } else if (type === 'stock') {
+        stockSymbols.forEach(p => options.push(`<option value="${p}">${p}</option>`));
+      }
+      instrument.innerHTML = options.join('');
+    }
+
+    assetType.addEventListener('change', updateInstruments);
 
     let trades = JSON.parse(localStorage.getItem('trades')) || [];
 
@@ -109,6 +152,7 @@
         card.className = 'trade-card';
         card.innerHTML = `
           <strong>${trade.datetime}</strong><br>
+          <b>Asset:</b> ${trade.assetType}<br>
           <b>Instrument:</b> ${trade.instrument}<br>
           <b>Setup:</b> ${trade.setup}<br>
           <b>Entry/Exit:</b> ${trade.entryExit}<br>
@@ -133,6 +177,7 @@
       e.preventDefault();
       const newTrade = {
         datetime: document.getElementById('datetime').value,
+        assetType: document.getElementById('assetType').value,
         instrument: document.getElementById('instrument').value,
         setup: document.getElementById('setup').value,
         entryExit: document.getElementById('entryExit').value,
@@ -145,6 +190,7 @@
       trades.push(newTrade);
       localStorage.setItem('trades', JSON.stringify(trades));
       form.reset();
+      instrument.innerHTML = '<option value="" disabled selected>Select Instrument</option>';
       displayTrades();
     });
 
